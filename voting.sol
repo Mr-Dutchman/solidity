@@ -74,7 +74,7 @@ contract Ballot{
         Voter storage delegate_ =voters[to];
         if (delegate_.voted){
             //add vote id delegate has voted
-            proposals[delegate_.vote] .voteCount += sender.weight;
+            proposals[delegate_.vote].voteCount += sender.weight;
 
 
         }else{
