@@ -1,7 +1,7 @@
 {
-  "name": "Solidity",
+  "name": "solidity",
   "version": "1.0.0",
-  "description": "",
+  "description": "This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,7 +11,7 @@
     "url": "git+https://github.com/Mr-Dutchman/Solidity.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Ehis Fidelis",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Mr-Dutchman/Solidity/issues"
@@ -19,5 +19,9 @@
   "homepage": "https://github.com/Mr-Dutchman/Solidity#readme",
   "devDependencies": {
     "hardhat": "^2.8.2"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {}
 }

@@ -1,4 +1,4 @@
-//SPDX-License-Identfier:GNU-3.0
+//SPDX-License-Identifier:GNU-3.0
 pragma solidity >= 0.8;
 contract Purchase{
     uint public value;
@@ -41,7 +41,7 @@ contract Purchase{
 
     event Aborted();
     event PurchaseConfirmed();
-    event ItemReciever();
+    event ItemReceived();
     event SellerRefunded();
 
     //Ensure that `msg.value` is an even number
@@ -68,16 +68,61 @@ contract Purchase{
         inState(State.Created)
         {
             emit Aborted();
-            state =State.Inactive;
-            
+            state = State.Inactive;
+            // We use transfer here directly. It is
+            // reentrancy-safe, because it is the
+            // last call in this function and we
+            // already changed the state.
             seller.transfer(address(this).balance);
         }
+
+
         ///to confirm the purchase as the buyer,
         ///the transaction has to include  `2*value` ether.
         /// the ether will be locked until confirmReceived is called
  
-        function confirmPurchase() external inState(State.Created)
+        function confirmPurchase() 
+        external
+        inState(State.Created)
+        condition(msg.value ==(2* value))
+        payable
+        {
+            emit PurchaseConfirmed();
+            buyer = payable(msg.sender);
+            state = State.Locked;
 
-        
+        }
+        ///confirm that you(the buyer) received the item.
+        ///this will release the locked ether.
 
+        function confirmReceived()
+            external
+            onlyBuyer()
+            inState(State.Locked)
+        {
+            emit ItemReceived();
+            //changing the state first because
+            //otherwise, the contract called using `send` below 
+            //can call in again here
+            state =State.Release;
+            buyer.transfer(value);
+
+                  
+        }
+        ///this function refunds the seller, ie.
+        ///pays back the locked funde of the seller.
+
+        function refundSeller()
+        external
+        onlySeller
+        inState(State.Release)
+        {
+            emit SellerRefunded();
+            //changing the state first because
+            //otherwise, the contracts called using `send` bellow
+            //can call it again here
+            state = State.Inactive;
+            seller.transfer (3 *value);
+            
+        }
 }
