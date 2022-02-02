@@ -124,5 +124,6 @@ contract Purchase{
             state = State.Inactive;
             seller.transfer (3 *value);
             
+            
         }
 }
